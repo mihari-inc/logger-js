@@ -1,0 +1,26 @@
+{
+  "name": "@mihari/browser",
+  "version": "0.1.0",
+  "description": "Browser client for mihari log collection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mihari/core": "^0.1.0",
+    "@mihari/types": "^0.1.0",
+    "pako": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/pako": "^2.0.3"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mihari/mihari-js",
+    "directory": "packages/browser"
+  }
+}

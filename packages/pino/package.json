@@ -1,0 +1,25 @@
+{
+  "name": "@mihari/pino",
+  "version": "0.1.0",
+  "description": "Pino transport for mihari log collection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mihari/core": "^0.1.0",
+    "@mihari/types": "^0.1.0"
+  },
+  "peerDependencies": {
+    "pino": ">=8.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mihari/mihari-js",
+    "directory": "packages/pino"
+  }
+}

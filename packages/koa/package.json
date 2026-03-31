@@ -1,0 +1,25 @@
+{
+  "name": "@mihari/koa",
+  "version": "0.1.0",
+  "description": "Koa request logging middleware for mihari",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mihari/core": "^0.1.0",
+    "@mihari/types": "^0.1.0"
+  },
+  "peerDependencies": {
+    "koa": ">=2.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mihari/mihari-js",
+    "directory": "packages/koa"
+  }
+}
