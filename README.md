@@ -6,16 +6,16 @@ Open-source log collection and transport library for JavaScript and TypeScript.
 
 | Package | Description |
 |---------|-------------|
-| `@mihari/types` | Shared TypeScript type definitions |
-| `@mihari/core` | Core transport, batching, and client logic |
-| `@mihari/node` | Node.js client with automatic system metadata |
-| `@mihari/browser` | Browser client with sendBeacon support |
-| `@mihari/js` | Isomorphic entry point (auto-detects environment) |
-| `@mihari/pino` | Pino transport integration |
-| `@mihari/winston` | Winston transport integration |
-| `@mihari/bunyan` | Bunyan stream integration |
-| `@mihari/koa` | Koa request logging middleware |
-| `@mihari/tool` | CLI tool for sending logs |
+| `@mihari/logger-types` | Shared TypeScript type definitions |
+| `@mihari/logger-core` | Core transport, batching, and client logic |
+| `@mihari/logger-node` | Node.js client with automatic system metadata |
+| `@mihari/logger-browser` | Browser client with sendBeacon support |
+| `@mihari/logger-js` | Isomorphic entry point (auto-detects environment) |
+| `@mihari/logger-pino` | Pino transport integration |
+| `@mihari/logger-winston` | Winston transport integration |
+| `@mihari/logger-bunyan` | Bunyan stream integration |
+| `@mihari/logger-koa` | Koa request logging middleware |
+| `@mihari/logger-tool` | CLI tool for sending logs |
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ npm install @mihari/js
 ```
 
 ```typescript
-import { createMihari } from "@mihari/js";
+import { createMihari } from "@mihari/logger-js";
 
 const logger = createMihari({
   token: "your-api-token",

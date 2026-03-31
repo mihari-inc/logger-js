@@ -1,4 +1,4 @@
-import { LogEntry, TransportOptions, TransportResponse, CompressFn } from "@mihari/types";
+import { LogEntry, TransportOptions, TransportResponse, CompressFn } from "@mihari/logger-types";
 import { sleep } from "./utils";
 
 const DEFAULT_RETRIES = 3;

@@ -1,5 +1,5 @@
-import { MihariClient } from "@mihari/core";
-import { LogLevel, MihariConfig } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { LogLevel, MihariConfig } from "@mihari/logger-types";
 
 /**
  * Minimal Koa context type to avoid requiring koa as a direct dependency.
@@ -36,7 +36,7 @@ type KoaMiddleware = (ctx: KoaContext, next: KoaNext) => Promise<void>;
  * Usage:
  * ```typescript
  * import Koa from "koa";
- * import { mihariMiddleware } from "@mihari/koa";
+ * import { mihariMiddleware } from "@mihari/logger-koa";
  *
  * const app = new Koa();
  *

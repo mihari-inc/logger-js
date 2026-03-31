@@ -1,18 +1,18 @@
-# @mihari/pino
+# @mihari/logger-pino
 
 Pino transport for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/pino pino
+npm install @mihari/logger-pino pino
 ```
 
 ## Usage
 
 ```typescript
 import pino from "pino";
-import { createMihariTransport } from "@mihari/pino";
+import { createMihariTransport } from "@mihari/logger-pino";
 
 const transport = createMihariTransport({
   token: "your-api-token",

@@ -1,6 +1,6 @@
 import { Writable } from "stream";
-import { MihariClient } from "@mihari/core";
-import { LogLevel, MihariConfig } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { LogLevel, MihariConfig } from "@mihari/logger-types";
 
 /**
  * Maps pino numeric levels to mihari LogLevel values.
@@ -28,7 +28,7 @@ interface PinoLogObject {
  * Usage:
  * ```typescript
  * import pino from "pino";
- * import { createMihariTransport } from "@mihari/pino";
+ * import { createMihariTransport } from "@mihari/logger-pino";
  *
  * const transport = createMihariTransport({
  *   token: "your-token",
@@ -41,7 +41,7 @@ interface PinoLogObject {
  * Or with pino's transport option:
  * ```typescript
  * const logger = pino({
- *   transport: { target: "@mihari/pino" }
+ *   transport: { target: "@mihari/logger-pino" }
  * });
  * ```
  */

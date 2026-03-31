@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // Mock @mihari/core
 const mockLog = vi.fn();
 
-vi.mock("@mihari/core", () => ({
+vi.mock("@mihari/logger-core", () => ({
   MihariClient: vi.fn().mockImplementation(() => ({
     log: mockLog,
   })),
@@ -11,7 +11,7 @@ vi.mock("@mihari/core", () => ({
 
 import { mihariMiddleware } from "../src/index";
 import defaultExport from "../src/index";
-import { LogLevel } from "@mihari/types";
+import { LogLevel } from "@mihari/logger-types";
 
 const TEST_CONFIG = { token: "test-token", endpoint: "https://logs.test.com" };
 

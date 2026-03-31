@@ -1,17 +1,17 @@
-# @mihari/node
+# @mihari/logger-node
 
 Node.js client for the mihari log collection library with automatic system metadata capture.
 
 ## Installation
 
 ```bash
-npm install @mihari/node
+npm install @mihari/logger-node
 ```
 
 ## Usage
 
 ```typescript
-import { NodeMihari } from "@mihari/node";
+import { NodeMihari } from "@mihari/logger-node";
 
 const logger = new NodeMihari({
   token: "your-api-token",

@@ -1,18 +1,18 @@
-# @mihari/winston
+# @mihari/logger-winston
 
 Winston transport for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/winston winston
+npm install @mihari/logger-winston winston
 ```
 
 ## Usage
 
 ```typescript
 import winston from "winston";
-import { MihariWinstonTransport } from "@mihari/winston";
+import { MihariWinstonTransport } from "@mihari/logger-winston";
 
 const logger = winston.createLogger({
   transports: [

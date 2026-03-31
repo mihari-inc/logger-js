@@ -1,6 +1,6 @@
 import pako from "pako";
-import { MihariClient } from "@mihari/core";
-import { MihariConfig, CompressFn } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { MihariConfig, CompressFn } from "@mihari/logger-types";
 
 const browserCompressFn: CompressFn = async (data) => {
   return pako.gzip(data);
@@ -84,4 +84,4 @@ export class BrowserMihari extends MihariClient {
   }
 }
 
-export { MihariConfig } from "@mihari/types";
+export { MihariConfig } from "@mihari/logger-types";

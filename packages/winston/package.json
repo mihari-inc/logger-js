@@ -1,5 +1,5 @@
 {
-  "name": "@mihari/winston",
+  "name": "@mihari/logger-winston",
   "version": "0.1.0",
   "description": "Winston transport for mihari log collection",
   "main": "dist/index.js",
@@ -14,8 +14,8 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@mihari/core": "^0.1.0",
-    "@mihari/types": "^0.1.0",
+    "@mihari/logger-core": "^0.1.0",
+    "@mihari/logger-types": "^0.1.0",
     "winston-transport": "^4.7.0"
   },
   "peerDependencies": {

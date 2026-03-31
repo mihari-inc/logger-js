@@ -1,7 +1,7 @@
-import { MihariClient } from "@mihari/core";
-import { MihariConfig } from "@mihari/types";
-import { NodeMihari } from "@mihari/node";
-import { BrowserMihari } from "@mihari/browser";
+import { MihariClient } from "@mihari/logger-core";
+import { MihariConfig } from "@mihari/logger-types";
+import { NodeMihari } from "@mihari/logger-node";
+import { BrowserMihari } from "@mihari/logger-browser";
 
 /**
  * Detects whether the current runtime is a browser environment.
@@ -25,7 +25,7 @@ export function createMihari(config: MihariConfig): MihariClient {
   return new NodeMihari(config);
 }
 
-export { MihariClient } from "@mihari/core";
-export { NodeMihari } from "@mihari/node";
-export { BrowserMihari } from "@mihari/browser";
-export { MihariConfig, LogLevel, LogEntry } from "@mihari/types";
+export { MihariClient } from "@mihari/logger-core";
+export { NodeMihari } from "@mihari/logger-node";
+export { BrowserMihari } from "@mihari/logger-browser";
+export { MihariConfig, LogLevel, LogEntry } from "@mihari/logger-types";

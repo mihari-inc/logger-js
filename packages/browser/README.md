@@ -1,17 +1,17 @@
-# @mihari/browser
+# @mihari/logger-browser
 
 Browser client for the mihari log collection library with sendBeacon support.
 
 ## Installation
 
 ```bash
-npm install @mihari/browser
+npm install @mihari/logger-browser
 ```
 
 ## Usage
 
 ```typescript
-import { BrowserMihari } from "@mihari/browser";
+import { BrowserMihari } from "@mihari/logger-browser";
 
 const logger = new BrowserMihari({
   token: "your-api-token",

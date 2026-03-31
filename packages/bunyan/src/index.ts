@@ -1,6 +1,6 @@
 import { Writable } from "stream";
-import { MihariClient } from "@mihari/core";
-import { LogLevel, MihariConfig } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { LogLevel, MihariConfig } from "@mihari/logger-types";
 
 /**
  * Maps bunyan numeric levels to mihari LogLevel values.
@@ -31,7 +31,7 @@ interface BunyanLogRecord {
  * Usage:
  * ```typescript
  * import bunyan from "bunyan";
- * import { MihariBunyanStream } from "@mihari/bunyan";
+ * import { MihariBunyanStream } from "@mihari/logger-bunyan";
  *
  * const mihariStream = new MihariBunyanStream({
  *   token: "your-token",

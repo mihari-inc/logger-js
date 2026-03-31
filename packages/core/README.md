@@ -1,17 +1,17 @@
-# @mihari/core
+# @mihari/logger-core
 
 Core transport, batching, and client logic for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/core
+npm install @mihari/logger-core
 ```
 
 ## Usage
 
 ```typescript
-import { MihariClient } from "@mihari/core";
+import { MihariClient } from "@mihari/logger-core";
 
 const client = new MihariClient({
   token: "your-api-token",

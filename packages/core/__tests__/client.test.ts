@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { MihariClient } from "../src/client";
-import { LogLevel } from "@mihari/types";
+import { LogLevel } from "@mihari/logger-types";
 
 function mockFetchSuccess(): ReturnType<typeof vi.fn> {
   const fn = vi.fn().mockResolvedValue({

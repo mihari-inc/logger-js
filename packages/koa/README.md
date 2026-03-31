@@ -1,18 +1,18 @@
-# @mihari/koa
+# @mihari/logger-koa
 
 Koa request logging middleware for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/koa koa
+npm install @mihari/logger-koa koa
 ```
 
 ## Usage
 
 ```typescript
 import Koa from "koa";
-import { mihariMiddleware } from "@mihari/koa";
+import { mihariMiddleware } from "@mihari/logger-koa";
 
 const app = new Koa();
 

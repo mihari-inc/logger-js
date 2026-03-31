@@ -1,11 +1,11 @@
-# @mihari/types
+# @mihari/logger-types
 
 Shared TypeScript type definitions for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/types
+npm install @mihari/logger-types
 ```
 
 ## Exports

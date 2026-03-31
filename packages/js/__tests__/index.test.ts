@@ -36,7 +36,7 @@ describe("createMihari", () => {
     delete (globalThis as Record<string, unknown>).window;
 
     const { createMihari } = await import("../src/index");
-    const { NodeMihari } = await import("@mihari/node");
+    const { NodeMihari } = await import("@mihari/logger-node");
 
     const client = createMihari(baseConfig);
     expect(client).toBeInstanceOf(NodeMihari);
@@ -62,7 +62,7 @@ describe("createMihari", () => {
     };
 
     const { createMihari } = await import("../src/index");
-    const { BrowserMihari } = await import("@mihari/browser");
+    const { BrowserMihari } = await import("@mihari/logger-browser");
 
     const client = createMihari(baseConfig);
     expect(client).toBeInstanceOf(BrowserMihari);

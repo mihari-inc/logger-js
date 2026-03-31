@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { HttpTransport } from "../src/transport";
-import { LogLevel, type LogEntry } from "@mihari/types";
+import { LogLevel, type LogEntry } from "@mihari/logger-types";
 
 function makeEntry(overrides: Partial<LogEntry> = {}): LogEntry {
   return {

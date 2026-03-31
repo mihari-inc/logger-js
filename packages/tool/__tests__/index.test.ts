@@ -11,7 +11,7 @@ const mockFatal = vi.fn();
 const mockFlush = vi.fn().mockResolvedValue(undefined);
 const mockShutdown = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("@mihari/core", () => ({
+vi.mock("@mihari/logger-core", () => ({
   MihariClient: vi.fn().mockImplementation(() => ({
     log: mockLog,
     debug: mockDebug,
@@ -85,7 +85,7 @@ describe("tool CLI", () => {
   async function runCLI(args: readonly string[]) {
     process.argv = ["node", "mihari", ...args];
     // Re-apply mocks after resetModules
-    vi.doMock("@mihari/core", () => ({
+    vi.doMock("@mihari/logger-core", () => ({
       MihariClient: vi.fn().mockImplementation(() => ({
         log: mockLog,
         debug: mockDebug,

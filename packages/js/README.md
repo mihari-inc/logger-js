@@ -1,17 +1,17 @@
-# @mihari/js
+# @mihari/logger-js
 
 Isomorphic mihari client that auto-detects the runtime environment and returns the appropriate client.
 
 ## Installation
 
 ```bash
-npm install @mihari/js
+npm install @mihari/logger-js
 ```
 
 ## Usage
 
 ```typescript
-import { createMihari } from "@mihari/js";
+import { createMihari } from "@mihari/logger-js";
 
 const logger = createMihari({
   token: "your-api-token",

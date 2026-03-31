@@ -1,4 +1,4 @@
-import { LogLevel, LogEntry, MihariConfig, CompressFn } from "@mihari/types";
+import { LogLevel, LogEntry, MihariConfig, CompressFn } from "@mihari/logger-types";
 import { HttpTransport } from "./transport";
 import { Batcher } from "./batcher";
 import { isoTimestamp } from "./utils";

@@ -1,8 +1,8 @@
 import * as os from "os";
 import * as zlib from "zlib";
 import { promisify } from "util";
-import { MihariClient } from "@mihari/core";
-import { MihariConfig, CompressFn } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { MihariConfig, CompressFn } from "@mihari/logger-types";
 
 const gzip = promisify(zlib.gzip);
 
@@ -71,4 +71,4 @@ export class NodeMihari extends MihariClient {
   }
 }
 
-export { MihariConfig } from "@mihari/types";
+export { MihariConfig } from "@mihari/logger-types";

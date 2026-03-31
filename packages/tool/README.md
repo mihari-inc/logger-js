@@ -1,11 +1,11 @@
-# @mihari/tool
+# @mihari/logger-tool
 
 CLI tool for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install -g @mihari/tool
+npm install -g @mihari/logger-tool
 ```
 
 ## Configuration

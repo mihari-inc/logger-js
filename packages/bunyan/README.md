@@ -1,18 +1,18 @@
-# @mihari/bunyan
+# @mihari/logger-bunyan
 
 Bunyan stream for the mihari log collection library.
 
 ## Installation
 
 ```bash
-npm install @mihari/bunyan bunyan
+npm install @mihari/logger-bunyan bunyan
 ```
 
 ## Usage
 
 ```typescript
 import bunyan from "bunyan";
-import { MihariBunyanStream } from "@mihari/bunyan";
+import { MihariBunyanStream } from "@mihari/logger-bunyan";
 
 const mihariStream = new MihariBunyanStream({
   token: "your-api-token",

@@ -5,7 +5,7 @@ import EventEmitter from "events";
 const mockLog = vi.fn();
 const mockShutdown = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("@mihari/core", () => ({
+vi.mock("@mihari/logger-core", () => ({
   MihariClient: vi.fn().mockImplementation(() => ({
     log: mockLog,
     shutdown: mockShutdown,
@@ -24,7 +24,7 @@ vi.mock("winston-transport", () => {
 
 import { MihariWinstonTransport } from "../src/index";
 import DefaultExport from "../src/index";
-import { LogLevel } from "@mihari/types";
+import { LogLevel } from "@mihari/logger-types";
 
 const TEST_CONFIG = { token: "test-token", endpoint: "https://logs.test.com" };
 

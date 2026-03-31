@@ -1,6 +1,6 @@
 import Transport from "winston-transport";
-import { MihariClient } from "@mihari/core";
-import { LogLevel, MihariConfig } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { LogLevel, MihariConfig } from "@mihari/logger-types";
 
 /**
  * Maps winston level strings to mihari LogLevel values.
@@ -44,7 +44,7 @@ export interface MihariWinstonOptions extends Transport.TransportStreamOptions {
  * Usage:
  * ```typescript
  * import winston from "winston";
- * import { MihariWinstonTransport } from "@mihari/winston";
+ * import { MihariWinstonTransport } from "@mihari/logger-winston";
  *
  * const logger = winston.createLogger({
  *   transports: [

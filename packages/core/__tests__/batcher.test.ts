@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Batcher, type FlushCallback } from "../src/batcher";
-import { LogLevel, type LogEntry } from "@mihari/types";
+import { LogLevel, type LogEntry } from "@mihari/logger-types";
 
 function makeEntry(msg = "test"): LogEntry {
   return {

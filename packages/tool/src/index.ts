@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import * as readline from "readline";
-import { MihariClient } from "@mihari/core";
-import { LogLevel, MihariConfig } from "@mihari/types";
+import { MihariClient } from "@mihari/logger-core";
+import { LogLevel, MihariConfig } from "@mihari/logger-types";
 
 const USAGE = `
 mihari - CLI tool for mihari log collection

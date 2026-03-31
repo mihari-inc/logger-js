@@ -12,4 +12,4 @@ export {
   TransportResponse,
   TransportError,
   CompressFn,
-} from "@mihari/types";
+} from "@mihari/logger-types";
