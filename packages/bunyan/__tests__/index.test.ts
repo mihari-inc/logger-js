@@ -31,6 +31,21 @@ function makeBunyanRecord(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function writeAsync(stream: Writable, data: unknown): Promise<void> {
+  return new Promise((resolve, reject) => {
+    stream.write(data, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+function endAsync(stream: Writable): Promise<void> {
+  return new Promise((resolve) => {
+    stream.end(() => resolve());
+  });
+}
+
 describe("MihariBunyanStream", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,98 +73,87 @@ describe("MihariBunyanStream", () => {
 
     it.each(cases)(
       "maps bunyan level $bunyanLevel to $expected",
-      ({ bunyanLevel, expected }, done) => {
+      async ({ bunyanLevel, expected }) => {
         const stream = new MihariBunyanStream(TEST_CONFIG);
         const record = makeBunyanRecord({ level: bunyanLevel });
 
-        stream.write(record, () => {
-          expect(mockLog).toHaveBeenCalledWith(
-            expected,
-            "test message",
-            expect.any(Object)
-          );
-          stream.destroy();
-          if (typeof done === "function") done();
-        });
+        await writeAsync(stream, record);
+
+        expect(mockLog).toHaveBeenCalledWith(
+          expected,
+          "test message",
+          expect.any(Object)
+        );
+        stream.destroy();
       }
     );
   });
 
-  it("maps levels below 20 to Debug", (done) => {
+  it("maps levels below 20 to Debug", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
-    stream.write(makeBunyanRecord({ level: 5 }), () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Debug, "test message", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, makeBunyanRecord({ level: 5 }));
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Debug, "test message", expect.any(Object));
+    stream.destroy();
   });
 
-  it("maps levels above 50 to Fatal", (done) => {
+  it("maps levels above 50 to Fatal", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
-    stream.write(makeBunyanRecord({ level: 70 }), () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Fatal, "test message", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, makeBunyanRecord({ level: 70 }));
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Fatal, "test message", expect.any(Object));
+    stream.destroy();
   });
 
-  it("passes msg as the log message", (done) => {
+  it("passes msg as the log message", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
-    stream.write(makeBunyanRecord({ msg: "hello bunyan" }), () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "hello bunyan", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, makeBunyanRecord({ msg: "hello bunyan" }));
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "hello bunyan", expect.any(Object));
+    stream.destroy();
   });
 
-  it("includes bunyanName, hostname, and pid in metadata", (done) => {
+  it("includes bunyanName, hostname, and pid in metadata", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
     const record = makeBunyanRecord({ name: "my-service", hostname: "host-2", pid: 5678 });
 
-    stream.write(record, () => {
-      expect(mockLog).toHaveBeenCalledWith(
-        LogLevel.Info,
-        "test message",
-        expect.objectContaining({
-          bunyanName: "my-service",
-          hostname: "host-2",
-          pid: 5678,
-        })
-      );
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, record);
+
+    expect(mockLog).toHaveBeenCalledWith(
+      LogLevel.Info,
+      "test message",
+      expect.objectContaining({
+        bunyanName: "my-service",
+        hostname: "host-2",
+        pid: 5678,
+      })
+    );
+    stream.destroy();
   });
 
-  it("excludes time, v, level, and msg from metadata (destructured out)", (done) => {
+  it("excludes time, v, level, and msg from metadata (destructured out)", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
-    stream.write(makeBunyanRecord(), () => {
-      const calledMeta = mockLog.mock.calls[0][2];
-      expect(calledMeta).not.toHaveProperty("time");
-      expect(calledMeta).not.toHaveProperty("v");
-      expect(calledMeta).not.toHaveProperty("level");
-      expect(calledMeta).not.toHaveProperty("msg");
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, makeBunyanRecord());
+    const calledMeta = mockLog.mock.calls[0][2];
+    expect(calledMeta).not.toHaveProperty("time");
+    expect(calledMeta).not.toHaveProperty("v");
+    expect(calledMeta).not.toHaveProperty("level");
+    expect(calledMeta).not.toHaveProperty("msg");
+    stream.destroy();
   });
 
-  it("forwards extra metadata fields from the bunyan record", (done) => {
+  it("forwards extra metadata fields from the bunyan record", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
     const record = makeBunyanRecord({ requestId: "req-42", component: "auth" });
 
-    stream.write(record, () => {
-      expect(mockLog).toHaveBeenCalledWith(
-        LogLevel.Info,
-        "test message",
-        expect.objectContaining({ requestId: "req-42", component: "auth" })
-      );
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, record);
+
+    expect(mockLog).toHaveBeenCalledWith(
+      LogLevel.Info,
+      "test message",
+      expect.objectContaining({ requestId: "req-42", component: "auth" })
+    );
+    stream.destroy();
   });
 
-  it("calls callback with error when _write throws", (done) => {
+  it("calls callback with error when _write throws", async () => {
     const stream = new MihariBunyanStream(TEST_CONFIG);
     mockLog.mockImplementationOnce(() => {
       throw new Error("log failed");
@@ -158,34 +162,26 @@ describe("MihariBunyanStream", () => {
       // suppress
     });
 
-    stream.write(makeBunyanRecord(), (err) => {
-      expect(err).toBeInstanceOf(Error);
-      expect((err as Error).message).toBe("log failed");
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await expect(writeAsync(stream, makeBunyanRecord())).rejects.toThrow("log failed");
+    stream.destroy();
   });
 
   describe("_final (shutdown)", () => {
-    it("calls client.shutdown on stream end", (done) => {
+    it("calls client.shutdown on stream end", async () => {
       const stream = new MihariBunyanStream(TEST_CONFIG);
-      stream.end(() => {
-        expect(mockShutdown).toHaveBeenCalled();
-        if (typeof done === "function") done();
-      });
+      await endAsync(stream);
+      expect(mockShutdown).toHaveBeenCalled();
     });
 
-    it("propagates shutdown errors", (done) => {
+    it("propagates shutdown errors", async () => {
       mockShutdown.mockRejectedValueOnce(new Error("shutdown boom"));
       const stream = new MihariBunyanStream(TEST_CONFIG);
       stream.on("error", () => {
         // suppress
       });
 
-      stream.end(() => {
-        expect(mockShutdown).toHaveBeenCalled();
-        if (typeof done === "function") done();
-      });
+      await endAsync(stream);
+      expect(mockShutdown).toHaveBeenCalled();
     });
   });
 });

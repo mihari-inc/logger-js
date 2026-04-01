@@ -36,28 +36,20 @@ function setupBrowserGlobals() {
     visibilityState: "visible" as string,
   };
 
-  // Assign to globalThis
-  (globalThis as Record<string, unknown>).window = mockWindow;
-  (globalThis as Record<string, unknown>).navigator = mockNavigator;
-  (globalThis as Record<string, unknown>).document = mockDocument;
-  (globalThis as Record<string, unknown>).Blob = class MockBlob {
+  // Use vi.stubGlobal to safely override read-only globals
+  vi.stubGlobal("window", mockWindow);
+  vi.stubGlobal("navigator", mockNavigator);
+  vi.stubGlobal("document", mockDocument);
+  vi.stubGlobal("Blob", class MockBlob {
     parts: unknown[];
     options: unknown;
     constructor(parts: unknown[], options?: unknown) {
       this.parts = parts;
       this.options = options;
     }
-  };
+  });
 
   return { mockWindow, mockNavigator, mockDocument, eventListeners };
-}
-
-function cleanupBrowserGlobals() {
-  delete (globalThis as Record<string, unknown>).window;
-  // Don't delete navigator/document as they may be needed by Node
-  (globalThis as Record<string, unknown>).navigator = undefined as unknown;
-  (globalThis as Record<string, unknown>).document = undefined as unknown;
-  delete (globalThis as Record<string, unknown>).Blob;
 }
 
 describe("BrowserMihari", () => {
@@ -76,7 +68,7 @@ describe("BrowserMihari", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
-    cleanupBrowserGlobals();
+    vi.unstubAllGlobals();
   });
 
   async function createBrowserMihari(overrides = {}) {
@@ -86,6 +78,7 @@ describe("BrowserMihari", () => {
       endpoint: "https://api.test.com",
       batchSize: 100,
       flushInterval: 0,
+      compression: false,
       ...overrides,
     });
   }

@@ -1,19 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import EventEmitter from "events";
+import { LogLevel } from "@mihari/logger-types";
 
-// Mock @mihari/core
-const mockLog = vi.fn();
-const mockShutdown = vi.fn().mockResolvedValue(undefined);
-
-vi.mock("@mihari/logger-core", () => ({
-  MihariClient: vi.fn().mockImplementation(() => ({
-    log: mockLog,
-    shutdown: mockShutdown,
-  })),
+// Hoist mock functions so vi.mock factories can reference them
+const { mockLog, mockShutdown } = vi.hoisted(() => ({
+  mockLog: vi.fn(),
+  mockShutdown: vi.fn().mockResolvedValue(undefined),
 }));
 
-// Mock winston-transport: provide a minimal base class
-vi.mock("winston-transport", () => {
+vi.mock("@mihari/logger-core", () => ({
+  MihariClient: vi.fn().mockImplementation(function () {
+    return { log: mockLog, shutdown: mockShutdown };
+  }),
+}));
+
+vi.mock("winston-transport", async () => {
+  const { EventEmitter } = await import("events");
   class FakeTransport extends EventEmitter {
     constructor(_opts?: Record<string, unknown>) {
       super();
@@ -22,9 +23,8 @@ vi.mock("winston-transport", () => {
   return { default: FakeTransport, __esModule: true };
 });
 
-import { MihariWinstonTransport } from "../src/index";
-import DefaultExport from "../src/index";
-import { LogLevel } from "@mihari/logger-types";
+const { MihariWinstonTransport } = await import("../src/index");
+const DefaultExport = (await import("../src/index")).default;
 
 const TEST_CONFIG = { token: "test-token", endpoint: "https://logs.test.com" };
 

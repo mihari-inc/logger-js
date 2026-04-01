@@ -14,6 +14,7 @@ const baseConfig = {
   endpoint: "https://api.test.com",
   batchSize: 100,
   flushInterval: 0,
+  compression: false,
 };
 
 describe("createMihari", () => {
@@ -27,8 +28,7 @@ describe("createMihari", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
-    // Clean up browser globals if set
-    delete (globalThis as Record<string, unknown>).window;
+    vi.unstubAllGlobals();
   });
 
   it("should return NodeMihari in Node.js environment", async () => {
@@ -43,34 +43,29 @@ describe("createMihari", () => {
   });
 
   it("should return BrowserMihari in browser environment", async () => {
-    // Simulate browser environment
-    (globalThis as Record<string, unknown>).window = {
+    // Simulate browser environment using vi.stubGlobal
+    vi.stubGlobal("window", {
       document: {},
       location: { href: "https://test.com" },
       addEventListener: vi.fn(),
-    };
-    (globalThis as Record<string, unknown>).navigator = {
+    });
+    vi.stubGlobal("navigator", {
       userAgent: "TestBrowser",
       sendBeacon: vi.fn(),
-    };
-    (globalThis as Record<string, unknown>).document = {
+    });
+    vi.stubGlobal("document", {
       referrer: "",
       visibilityState: "visible",
-    };
-    (globalThis as Record<string, unknown>).Blob = class {
+    });
+    vi.stubGlobal("Blob", class {
       constructor(public parts: unknown[], public options?: unknown) {}
-    };
+    });
 
     const { createMihari } = await import("../src/index");
     const { BrowserMihari } = await import("@mihari/logger-browser");
 
     const client = createMihari(baseConfig);
     expect(client).toBeInstanceOf(BrowserMihari);
-
-    // Cleanup
-    delete (globalThis as Record<string, unknown>).Blob;
-    (globalThis as Record<string, unknown>).navigator = undefined as unknown;
-    (globalThis as Record<string, unknown>).document = undefined as unknown;
   });
 
   it("should return a client with all log methods", async () => {
@@ -95,6 +90,7 @@ describe("createMihari", () => {
     await client.flush();
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    // compression is false, so body is plain JSON
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body[0].message).toBe("test message");
     expect(body[0].level).toBe("info");

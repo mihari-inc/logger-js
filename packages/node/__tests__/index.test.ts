@@ -33,6 +33,7 @@ describe("NodeMihari", () => {
       endpoint: "https://api.test.com",
       batchSize: 100,
       flushInterval: 0,
+      compression: false,
       ...overrides,
     });
   }
@@ -102,13 +103,24 @@ describe("NodeMihari", () => {
 
   describe("compression", () => {
     it("should enable compression by default", async () => {
+      // Use real timers for this test since gzip is truly async
+      vi.useRealTimers();
       const fetchMock = mockFetchSuccess();
-      const client = await createNodeMihari({ batchSize: 1 });
+      // Don't use createNodeMihari helper which sets compression: false
+      const { NodeMihari } = await import("../src/index");
+      const client = new NodeMihari({
+        token: "test-token",
+        endpoint: "https://api.test.com",
+        batchSize: 1,
+        flushInterval: 0,
+      });
 
       client.info("compressed");
 
-      await vi.advanceTimersByTimeAsync(0);
+      // Wait for async gzip + fetch to complete
+      await new Promise((r) => setTimeout(r, 200));
 
+      expect(fetchMock).toHaveBeenCalled();
       const headers = fetchMock.mock.calls[0][1].headers;
       expect(headers["Content-Encoding"]).toBe("gzip");
     });

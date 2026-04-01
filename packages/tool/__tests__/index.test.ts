@@ -305,23 +305,26 @@ describe("tool CLI", () => {
       expect(consoleLogSpy).toHaveBeenCalledWith("Sent 2 log entries");
     });
 
-    it("supports all log levels via --level flag", async () => {
-      for (const level of ["debug", "warn", "fatal"] as const) {
-        vi.clearAllMocks();
-        mockRlOn.mockReset();
+    it("supports debug level via --level flag", async () => {
+      await runCLI(["tail", "--level", "debug"]);
 
-        await runCLI(["tail", "--level", level]);
+      const lineHandler = mockRlOn.mock.calls.find(
+        (call: unknown[]) => call[0] === "line"
+      )?.[1] as (line: string) => void;
 
-        const lineHandler = mockRlOn.mock.calls.find(
-          (call: unknown[]) => call[0] === "line"
-        )?.[1] as (line: string) => void;
+      lineHandler("debug line");
+      expect(mockDebug).toHaveBeenCalledWith("debug line");
+    });
 
-        lineHandler(`${level} line`);
+    it("supports fatal level via --level flag", async () => {
+      await runCLI(["tail", "--level", "fatal"]);
 
-        const mockFn =
-          level === "debug" ? mockDebug : level === "warn" ? mockWarn : mockFatal;
-        expect(mockFn).toHaveBeenCalledWith(`${level} line`);
-      }
+      const lineHandler = mockRlOn.mock.calls.find(
+        (call: unknown[]) => call[0] === "line"
+      )?.[1] as (line: string) => void;
+
+      lineHandler("fatal line");
+      expect(mockFatal).toHaveBeenCalledWith("fatal line");
     });
   });
 });

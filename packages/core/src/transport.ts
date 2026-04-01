@@ -14,7 +14,7 @@ export class HttpTransport {
   constructor(options: TransportOptions) {
     this.token = options.token;
     this.endpoint = options.endpoint.replace(/\/+$/, "");
-    this.compression = options.compression ?? false;
+    this.compression = options.compression ?? true;
     this.maxRetries = options.retries ?? DEFAULT_RETRIES;
   }
 

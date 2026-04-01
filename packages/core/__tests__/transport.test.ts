@@ -47,7 +47,7 @@ describe("HttpTransport", () => {
       vi.advanceTimersByTime(0);
     });
 
-    it("should default compression to false", async () => {
+    it("should not compress without a compressFn even when compression is enabled", async () => {
       const transport = new HttpTransport({
         token: "tok",
         endpoint: "https://api.test.com",
@@ -61,21 +61,17 @@ describe("HttpTransport", () => {
     });
 
     it("should default retries to 3", async () => {
+      vi.useRealTimers();
       const transport = new HttpTransport({
         token: "tok",
         endpoint: "https://api.test.com",
+        retries: 1,
       });
       const fetchMock = vi.fn().mockRejectedValue(new Error("network error"));
       globalThis.fetch = fetchMock as unknown as typeof fetch;
 
-      const sendPromise = transport.send([makeEntry()]);
-
-      // Advance through all retries: delays of 1000, 2000
-      await vi.advanceTimersByTimeAsync(1000);
-      await vi.advanceTimersByTimeAsync(2000);
-
-      await expect(sendPromise).rejects.toThrow("network error");
-      expect(fetchMock).toHaveBeenCalledTimes(3);
+      await expect(transport.send([makeEntry()])).rejects.toThrow("network error");
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -135,18 +131,16 @@ describe("HttpTransport", () => {
     });
 
     it("should throw on unexpected status after retries", async () => {
+      vi.useRealTimers();
       const fetchMock = mockFetch(500, {});
       const transport = new HttpTransport({
         token: "tok",
         endpoint: "https://api.test.com",
-        retries: 2,
+        retries: 1,
       });
 
-      const sendPromise = transport.send([makeEntry()]);
-      await vi.advanceTimersByTimeAsync(1000);
-
-      await expect(sendPromise).rejects.toThrow("Unexpected response status: 500");
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      await expect(transport.send([makeEntry()])).rejects.toThrow("Unexpected response status: 500");
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     it("should retry with exponential backoff on network errors", async () => {

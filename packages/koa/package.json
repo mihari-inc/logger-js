@@ -2,8 +2,8 @@
   "name": "@mihari/logger-koa",
   "version": "0.1.0",
   "description": "Koa request logging middleware for mihari",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "files": ["dist"],
   "scripts": {
     "build": "tsc",

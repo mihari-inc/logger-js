@@ -18,6 +18,21 @@ import { LogLevel } from "@mihari/logger-types";
 
 const TEST_CONFIG = { token: "test-token", endpoint: "https://logs.test.com" };
 
+function writeAsync(stream: Writable, data: unknown): Promise<void> {
+  return new Promise((resolve, reject) => {
+    stream.write(data, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+function endAsync(stream: Writable): Promise<void> {
+  return new Promise((resolve) => {
+    stream.end(() => resolve());
+  });
+}
+
 describe("createMihariTransport", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,71 +60,61 @@ describe("createMihariTransport", () => {
 
     it.each(cases)(
       "maps pino level $pinoLevel to $expected",
-      ({ pinoLevel, expected }, done) => {
+      async ({ pinoLevel, expected }) => {
         const stream = createMihariTransport(TEST_CONFIG);
         const entry = { level: pinoLevel, time: Date.now(), msg: "test msg" };
 
-        stream.write(entry, () => {
-          expect(mockLog).toHaveBeenCalledWith(
-            expected,
-            "test msg",
-            expect.any(Object)
-          );
-          stream.destroy();
-          if (typeof done === "function") done();
-        });
+        await writeAsync(stream, entry);
+
+        expect(mockLog).toHaveBeenCalledWith(
+          expected,
+          "test msg",
+          expect.any(Object)
+        );
+        stream.destroy();
       }
     );
   });
 
-  it("maps edge-case levels: below 20 is Debug, above 50 is Fatal", (done) => {
+  it("maps edge-case levels: below 20 is Debug, above 50 is Fatal", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
 
-    stream.write({ level: 5, time: Date.now(), msg: "trace-ish" }, () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Debug, "trace-ish", expect.any(Object));
+    await writeAsync(stream, { level: 5, time: Date.now(), msg: "trace-ish" });
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Debug, "trace-ish", expect.any(Object));
 
-      stream.write({ level: 70, time: Date.now(), msg: "beyond-fatal" }, () => {
-        expect(mockLog).toHaveBeenCalledWith(LogLevel.Fatal, "beyond-fatal", expect.any(Object));
-        stream.destroy();
-        if (typeof done === "function") done();
-      });
-    });
+    await writeAsync(stream, { level: 70, time: Date.now(), msg: "beyond-fatal" });
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Fatal, "beyond-fatal", expect.any(Object));
+    stream.destroy();
   });
 
-  it("extracts msg field as the log message", (done) => {
+  it("extracts msg field as the log message", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const entry = { level: 30, time: Date.now(), msg: "hello from pino" };
 
-    stream.write(entry, () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "hello from pino", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, entry);
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "hello from pino", expect.any(Object));
+    stream.destroy();
   });
 
-  it("falls back to message field when msg is absent", (done) => {
+  it("falls back to message field when msg is absent", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const entry = { level: 30, time: Date.now(), message: "fallback message" };
 
-    stream.write(entry, () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "fallback message", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, entry);
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "fallback message", expect.any(Object));
+    stream.destroy();
   });
 
-  it("uses empty string when both msg and message are absent", (done) => {
+  it("uses empty string when both msg and message are absent", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const entry = { level: 30, time: Date.now() };
 
-    stream.write(entry, () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, entry);
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Info, "", expect.any(Object));
+    stream.destroy();
   });
 
-  it("forwards extra metadata fields", (done) => {
+  it("forwards extra metadata fields", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const entry = {
       level: 30,
@@ -119,18 +124,17 @@ describe("createMihariTransport", () => {
       userId: 42,
     };
 
-    stream.write(entry, () => {
-      expect(mockLog).toHaveBeenCalledWith(
-        LogLevel.Info,
-        "with meta",
-        expect.objectContaining({ requestId: "abc-123", userId: 42 })
-      );
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, entry);
+
+    expect(mockLog).toHaveBeenCalledWith(
+      LogLevel.Info,
+      "with meta",
+      expect.objectContaining({ requestId: "abc-123", userId: 42 })
+    );
+    stream.destroy();
   });
 
-  it("includes pid and hostname when present", (done) => {
+  it("includes pid and hostname when present", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const entry = {
       level: 30,
@@ -140,63 +144,50 @@ describe("createMihariTransport", () => {
       hostname: "server-1",
     };
 
-    stream.write(entry, () => {
-      expect(mockLog).toHaveBeenCalledWith(
-        LogLevel.Info,
-        "with pid",
-        expect.objectContaining({ pid: 1234, hostname: "server-1" })
-      );
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, entry);
+
+    expect(mockLog).toHaveBeenCalledWith(
+      LogLevel.Info,
+      "with pid",
+      expect.objectContaining({ pid: 1234, hostname: "server-1" })
+    );
+    stream.destroy();
   });
 
-  it("parses string chunks as JSON", (done) => {
+  it("parses string chunks as JSON", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     const jsonString = JSON.stringify({ level: 40, time: Date.now(), msg: "string chunk" });
 
-    stream.write(jsonString, () => {
-      expect(mockLog).toHaveBeenCalledWith(LogLevel.Warn, "string chunk", expect.any(Object));
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await writeAsync(stream, jsonString);
+    expect(mockLog).toHaveBeenCalledWith(LogLevel.Warn, "string chunk", expect.any(Object));
+    stream.destroy();
   });
 
-  it("calls callback with error for invalid JSON string", (done) => {
+  it("calls callback with error for invalid JSON string", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
     stream.on("error", () => {
       // suppress unhandled error
     });
 
-    stream.write("not valid json", (err) => {
-      expect(err).toBeInstanceOf(Error);
-      stream.destroy();
-      if (typeof done === "function") done();
-    });
+    await expect(writeAsync(stream, "not valid json")).rejects.toThrow();
+    stream.destroy();
   });
 
-  it("calls client.shutdown on stream end (final)", (done) => {
+  it("calls client.shutdown on stream end (final)", async () => {
     const stream = createMihariTransport(TEST_CONFIG);
-
-    stream.end(() => {
-      expect(mockShutdown).toHaveBeenCalled();
-      if (typeof done === "function") done();
-    });
+    await endAsync(stream);
+    expect(mockShutdown).toHaveBeenCalled();
   });
 
-  it("propagates shutdown errors in final callback", (done) => {
+  it("propagates shutdown errors in final callback", async () => {
     mockShutdown.mockRejectedValueOnce(new Error("shutdown failed"));
     const stream = createMihariTransport(TEST_CONFIG);
     stream.on("error", () => {
       // suppress
     });
 
-    stream.end(() => {
-      // The error is propagated through the stream error event
-      // or through the final callback mechanism
-      expect(mockShutdown).toHaveBeenCalled();
-      if (typeof done === "function") done();
-    });
+    await endAsync(stream);
+    expect(mockShutdown).toHaveBeenCalled();
   });
 });
 
