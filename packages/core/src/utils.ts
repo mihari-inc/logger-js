@@ -10,8 +10,9 @@ export function isoTimestamp(): string {
  */
 export function isBrowser(): boolean {
   return (
-    typeof window !== "undefined" &&
-    typeof window.document !== "undefined"
+    typeof globalThis !== "undefined" &&
+    typeof (globalThis as Record<string, unknown>).window !== "undefined" &&
+    typeof (globalThis as Record<string, unknown>).document !== "undefined"
   );
 }
 

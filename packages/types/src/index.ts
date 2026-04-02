@@ -46,4 +46,4 @@ export interface TransportError {
   readonly error: string;
 }
 
-export type CompressFn = (data: Buffer | Uint8Array) => Promise<Buffer | Uint8Array>;
+export type CompressFn = (data: Uint8Array) => Promise<Uint8Array>;

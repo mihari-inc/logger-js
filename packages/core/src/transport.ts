@@ -32,16 +32,14 @@ export class HttpTransport {
    */
   async send(logs: readonly LogEntry[]): Promise<TransportResponse> {
     const payload = JSON.stringify(logs);
-    let body: string | Buffer | Uint8Array = payload;
+    let body: string | Uint8Array = payload;
     const headers: Record<string, string> = {
       "Authorization": `Bearer ${this.token}`,
       "Content-Type": "application/json",
     };
 
     if (this.compression && this.compressFn) {
-      const encoded = typeof TextEncoder !== "undefined"
-        ? new TextEncoder().encode(payload)
-        : Buffer.from(payload, "utf-8");
+      const encoded = new TextEncoder().encode(payload);
       body = await this.compressFn(encoded);
       headers["Content-Encoding"] = "gzip";
     }
@@ -87,14 +85,15 @@ export class HttpTransport {
   }
 
   private async doFetch(
-    body: string | Buffer | Uint8Array,
+    body: string | Uint8Array,
     headers: Record<string, string>
   ): Promise<{ status: number; json: unknown }> {
     // Use global fetch (available in Node 18+ and all modern browsers)
     const res = await fetch(`${this.endpoint}`, {
       method: "POST",
       headers,
-      body,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body: body as any,
     });
 
     const json = await res.json().catch(() => ({}));

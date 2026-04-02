@@ -3,13 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "lib": ["ES2020", "DOM"]
+    "lib": [
+      "ES2020",
+      "DOM"
+    ]
   },
-  "include": ["src"],
-  "references": [
-    { "path": "../types" },
-    { "path": "../core" },
-    { "path": "../node" },
-    { "path": "../browser" }
+  "include": [
+    "src"
   ]
 }

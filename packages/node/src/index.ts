@@ -7,7 +7,8 @@ import { MihariConfig, CompressFn } from "@mihari/logger-types";
 const gzip = promisify(zlib.gzip);
 
 const nodeCompressFn: CompressFn = async (data) => {
-  return gzip(Buffer.from(data));
+  const result = await gzip(Buffer.from(data));
+  return new Uint8Array(result);
 };
 
 export class NodeMihari extends MihariClient {
