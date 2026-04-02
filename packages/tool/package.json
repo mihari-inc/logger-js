@@ -7,11 +7,13 @@
   "bin": {
     "mihari": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "vitest run"
+    "test": "cd ../.. && npx vitest run --config vitest.config.ts packages/tool"
   },
   "devDependencies": {
     "vitest": "^3.0.0"

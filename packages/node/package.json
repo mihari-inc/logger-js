@@ -4,11 +4,13 @@
   "description": "Node.js client for mihari log collection",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "vitest run"
+    "test": "cd ../.. && npx vitest run --config vitest.config.ts packages/node"
   },
   "dependencies": {
     "@mihari/logger-core": "^0.1.0",

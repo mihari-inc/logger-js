@@ -4,11 +4,13 @@
   "description": "Winston transport for mihari log collection",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "vitest run"
+    "test": "cd ../.. && npx vitest run --config vitest.config.ts packages/winston"
   },
   "devDependencies": {
     "vitest": "^3.0.0"
