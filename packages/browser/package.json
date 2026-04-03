@@ -20,6 +20,9 @@
   "devDependencies": {
     "@types/pako": "^2.0.3"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

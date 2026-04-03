@@ -15,6 +15,9 @@
   "dependencies": {
     "@mihari/logger-types": "^0.1.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

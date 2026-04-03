@@ -12,6 +12,9 @@
     "clean": "rm -rf dist",
     "test": "cd ../.. && npx vitest run --config vitest.config.ts packages/types"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
