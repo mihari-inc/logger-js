@@ -28,4 +28,5 @@ export function createMihari(config: MihariConfig): MihariClient {
 export { MihariClient } from "@mihari/logger-core";
 export { NodeMihari } from "@mihari/logger-node";
 export { BrowserMihari } from "@mihari/logger-browser";
-export { MihariConfig, LogLevel, LogEntry } from "@mihari/logger-types";
+export { LogLevel } from "@mihari/logger-types";
+export type { MihariConfig, LogEntry } from "@mihari/logger-types";

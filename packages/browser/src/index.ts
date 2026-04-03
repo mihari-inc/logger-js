@@ -84,4 +84,4 @@ export class BrowserMihari extends MihariClient {
   }
 }
 
-export { MihariConfig } from "@mihari/logger-types";
+export type { MihariConfig } from "@mihari/logger-types";
