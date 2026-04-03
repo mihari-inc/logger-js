@@ -1,6 +1,6 @@
 {
   "name": "@mihari/logger-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Core transport, batching, and client logic for mihari",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -37,7 +37,7 @@
     ]
   },
   "dependencies": {
-    "@mihari/logger-types": "^0.2.0"
+    "@mihari/logger-types": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

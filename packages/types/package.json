@@ -1,6 +1,6 @@
 {
   "name": "@mihari/logger-types",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Shared TypeScript type definitions for mihari",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@mihari/logger-koa",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Koa request logging middleware for mihari",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -39,8 +39,8 @@
     ]
   },
   "dependencies": {
-    "@mihari/logger-core": "^0.2.0",
-    "@mihari/logger-types": "^0.2.0"
+    "@mihari/logger-core": "^0.3.0",
+    "@mihari/logger-types": "^0.3.0"
   },
   "peerDependencies": {
     "koa": ">=2.0.0"
